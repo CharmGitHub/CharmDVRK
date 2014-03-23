@@ -5,6 +5,15 @@
 #include "robot/CDaVinciRobotMTM.h"
 #include "robot/CDaVinciRobotPSM.h"
 #include "timer/CPrecisionClock.h"
+#include "math/CMath.h"
+//============================================================================
+enum robotControlType
+{
+  JointCtrlWithGC,
+  CartesianCtrlWithGC,
+  NoCtrlWithGC
+};
+
 //============================================================================
 //---------------------------Shared data structure----------------------------
 typedef struct
@@ -64,6 +73,7 @@ typedef struct
     cVector3d m_daVinciPSM1Force;
     cVector3d m_daVinciPSM1Torque;
     double m_daVinciPSM1JointForces[8];
+    double m_daVinciPSM1GripperForce;
 
     bool m_daVinciPSM1ArmInput;
     bool m_daVinciPSM1SterileAdapterInserted;
@@ -84,6 +94,7 @@ typedef struct
     cVector3d m_daVinciPSM2Force;
     cVector3d m_daVinciPSM2Torque;
     double m_daVinciPSM2JointForces[8];
+    double m_daVinciPSM2GripperForce;
 
     bool m_daVinciPSM2ArmInput;
     bool m_daVinciPSM2SterileAdapterInserted;
@@ -148,55 +159,35 @@ typedef struct
     // A shared clock
     cPrecisionClock sharedClock;
 
+    // Slave to master base frame rotation and vice versa
+    cMatrix3d m_slaveToMasterRotation;
+    cMatrix3d m_masterToSlaveRotation;
+
 //============================================================================
     // ------------------- Flags ------------------------
     // Flags for state machine
     bool m_flagHomeRobot;
     bool m_flagStartTeleoperation;
-    bool m_flagStartPSMCalibration;
-    bool m_flagStartMTMCalibration;
-
-    // Flags for force output
-    bool m_flagEnableMTMLForceOutput;
-    bool m_flagEnablePSM1ForceOutput;
-    bool m_flagEnableMTMRForceOutput;
-    bool m_flagEnablePSM2ForceOutput;
 
     // Flags for robot control types
-    bool m_flagEnableMTMLJointControl;
-    bool m_flagEnableMTMLCartesianControl;
-    bool m_flagEnablePSM1JointControl;
-    bool m_flagEnablePSM1CartesianControl;
-    bool m_flagEnableMTMRJointControl;
-    bool m_flagEnableMTMRCartesianControl;
-    bool m_flagEnablePSM2JointControl;
-    bool m_flagEnablePSM2CartesianControl;
+    robotControlType m_flagMTMLControlType;
+    robotControlType m_flagPSM1ControlType;
+    robotControlType m_flagMTMRControlType;
+    robotControlType m_flagPSM2ControlType;
 
     // Flags for power on and relay on
     bool m_flagEnableSafetyRelay;
     bool m_flagEnablePower;
 
     // Flags for threads
-    bool m_flagControl1ThreadEnd;
-    bool m_flagControl2ThreadEnd;
+    bool m_flagControlThreadEnd;
     bool m_flagStateMachineThreadEnd;
     bool m_flagDisplayThreadEnded;
-
-    // Flags for MTM-PSM misalignment
-    bool m_flagMTMLPSM1Misaligned;
-    bool m_flagMTMRPSM2Misaligned;
 
     // Flags for head presence
     bool m_flagHeadPresent;
 
-    // Flags for file saving
-    bool m_flagStartSavingDatatoFile;
-
-    int m_controlRate1;
-    int m_controlRate2;
-
-    cMatrix3d m_slaveToMasterRotation;
-
+    int m_controlRate;
 
 }sd_SharedData;
 

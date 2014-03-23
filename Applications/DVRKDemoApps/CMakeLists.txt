@@ -43,3 +43,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 add_executable(DVRKDemoApps ${DVRKDemoApps_SOURCES} ${DVRKDemoApps_HEADERS} ${MOC_SOURCES} ${FORMS_HEADER})
 target_link_libraries(DVRKDemoApps ${QT_LIBRARIES} ${QT_QTOPENGL_LIBRARY} ${QT_QTGUI_LIBRARY} DVRKCore raw1394)
 cisst_target_link_libraries (DVRKDemoApps ${REQUIRED_CISST_lIBRARIES})
+
+# Copy the robotparamfile directory to the build directory
+file(COPY robotparamfiles DESTINATION ${DVRKDemoApps_BINARY_DIR})
