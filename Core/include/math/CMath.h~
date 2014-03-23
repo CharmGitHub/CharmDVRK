@@ -1,0 +1,19 @@
+#ifndef CMATH_H
+#define CMATH_H
+//===========================================================================
+#include <math.h>
+
+//===========================================================================
+inline double cDegToRad(const double& a_angleDeg)
+{
+    return (a_angleDeg * CHAI_DEG2RAD);
+}
+
+//===========================================================================
+inline double cRadToDeg(const double& a_angleRad)
+{
+    return (a_angleRad * CHAI_RAD2DEG);
+}
+
+//===========================================================================
+#endif
