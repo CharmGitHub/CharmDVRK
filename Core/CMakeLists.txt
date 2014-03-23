@@ -45,12 +45,18 @@ set(robot_source_files
   src/robot/CDaVinciRobotPSM.cpp
 )
 
+# Define a variable timer_source_files containing a list of the source
+# files for the timer library
+set(timer_source_files
+  src/timer/CPrecisionClock.cpp
+)
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${DVRKCore_BINARY_DIR}/lib)
 
 # Create a library called io which includes the source files defined
 # in the robot_source_files
-add_library(DVRKCore ${io_source_files} ${xmlreader_source_files} ${robot_source_files})
-
+add_library(DVRKCore STATIC ${io_source_files} ${xmlreader_source_files} ${robot_source_files} ${timer_source_files})
+target_link_libraries(DVRKCore raw1394)
 
 # Copy the include directory to the build directory
 file(COPY include DESTINATION ${DVRKCore_BINARY_DIR})
